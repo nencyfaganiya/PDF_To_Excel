@@ -1,20 +1,19 @@
 import streamlit as st
-from pathlib import Path
+import cv2
+import pytesseract
 import pandas as pd
-from datetime import datetime
+import fitz  # PyMuPDF
+from PIL import Image
+import numpy as np
+import io
 
-# Define categories
-categories = ["CONTRACTUAL", "ARCHITECTURAL", "STRUCTURAL", "SERVICES", "SAFETY"]
+# Configure Tesseract path if needed
+# pytesseract.pytesseract.tesseract_cmd = r'path_to_your_tesseract_executable'
 
-# Define the directory containing the files
-directory_path = Path("/path/to/your/files")
-
-# List all files in the directory
-files = [file for file in directory_path.glob("*") if file.is_file()]
-
-# Dictionary to store file categories
-file_categories = {}
-
-st.title("File Categorization Tool")
-
-st.write("### Step 1: Choose a Category for Each File")
+# Function to preprocess and perform OCR on an image
+def process_image(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    _, thresh = cv2.threshold(gray, 150, 255, cv2.THRESH_BINARY)
+    custom_config = r'--oem 3 --psm 6'
+    text = pytesseract.image_to_string(thresh, config=custom_config)
+    return text
