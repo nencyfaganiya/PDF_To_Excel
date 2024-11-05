@@ -1,0 +1,8 @@
+streamlit
+cv2
+pytesseract
+pandas
+fitz 
+PIL 
+numpy 
+io
